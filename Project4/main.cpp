@@ -46,7 +46,7 @@ int main() {
 	clock_t endTime = clock();
 	cout << "Time Cost: " << (double)(endTime - startTime) / CLOCKS_PER_SEC << endl;
 	cout << " No:of data " << k << endl;
-	//test->displayList();
+	test->displayList();
 	cout << "sort start" << endl;
 	startTime = clock();
 	//InventoryList* sorted = test->quicksort();
@@ -54,7 +54,7 @@ int main() {
 	endTime = clock();
 	cout << "Time Cost for sorting:" << (double)(endTime - startTime) / CLOCKS_PER_SEC << endl;
 	cout << "display" << endl;
-	//test->displayList();
+	test->displayList();
 	cout << "completed" << endl;
 	//cout << sorted->transfered << endl;
 	//delete sorted;
@@ -64,6 +64,6 @@ int main() {
 	cout << "list deleted" << endl;
 	delete[] pi;
 	}
-	system("pause");
-	_CrtDumpMemoryLeaks();
+	//system("pause");
+	//_CrtDumpMemoryLeaks();
 }
