@@ -6,15 +6,13 @@
 #include "record.h"
 #include <string>
 #include "linkedlist.h"
-
 using namespace std;
 int main() {
 	{
 	std::ios_base::sync_with_stdio(false);
 	//ifstream file("C:\\Windows\\en-US\\DS_100K_csv.csv");
-	ifstream file("D:\\Download\\DS_100_csv.csv");
+	ifstream file("D:\\Download\\DS_100k_csv.csv");
 	InventoryList* test = new InventoryList();
-	cout << "list created" << endl;
 	test->sortCount = 0;
 	string* pi = new string[8];
 	int k = 0;
@@ -56,14 +54,10 @@ int main() {
 	cout << "display" << endl;
 	//test->displayList();
 	cout << "completed" << endl;
-	//cout << sorted->transfered << endl;
-	//delete sorted;
-	//cout << "sorted deleted " <<test->transfered<< endl;
 	test->markDeepDelete();
-	test->~InventoryList();
-	//cout << "list deleted" << endl;
+	test->transfered = 0;
+	delete test;
 	delete[] pi;
 	}
 	system("pause");
-	//_CrtDumpMemoryLeaks();
 }

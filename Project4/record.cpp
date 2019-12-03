@@ -4,6 +4,7 @@
 
 record::record()
 {
+	//cout << this << " Record Created" << endl;
 }
 record::record(string ID,string jobTitle,string emailAddress,string lastName,string firstName,string pNumber,string skills,string country)
 {
@@ -16,6 +17,7 @@ record::record(string ID,string jobTitle,string emailAddress,string lastName,str
 	this->skills=skills;
 	this->country=country;
 	deepDelete = 1;
+	//cout << this << " Record Created" << endl;
 }
 
 record::~record()
@@ -28,4 +30,5 @@ record::~record()
 		<< &pNumber << " "
 		<< &skills << " "
 		<< &country << endl;*/
+	//cout << this << " Record Deleted" << endl;
 }

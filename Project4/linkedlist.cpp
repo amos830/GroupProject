@@ -10,6 +10,7 @@ InventoryList::InventoryList() {
 	transfered = 0;
 	count = 0;
 	hasData = false;
+	//cout <<this<< " created" << endl;
 }
 InventoryList::InventoryList(ItemNode* head) {
 	head = head;
@@ -102,14 +103,20 @@ InventoryList* InventoryList::quicksort()
 		InventoryList* largeList =new InventoryList();
 		ItemNode* current = head->next;
 		ItemNode* pivot =head;
+		ItemNode* temp;
 		while (current != NULL)
 		{
-			if (pivot->data->country >= current->data->country) 
-				smallList->insertItem(current->data.get());
-			else 
-				largeList->insertItem(current->data.get());
+			temp = current;
 			current = current->next;
+			if (pivot->data->country >= temp->data->country) {
+				smallList->insertItem(temp);
+			}
+			else {
+				largeList->insertItem(temp);
+			}
 		}
+		this->transfered = 1;
+		delete this;
 		/*cout << "Sort Count "<<++sortCount<< endl;
 		cout << "small list address :" <<smallList<< endl;
 		smallList->displayList();
@@ -198,6 +205,7 @@ void InventoryList::emptyList()
 		delete curr;
 		curr = next;
 	}
+	cout << this << " content deleted" << endl;
 }
 
 bool InventoryList::isSorted()
