@@ -8,7 +8,6 @@
 #include "linkedlist.h"
 using namespace std;
 int main() {
-	{
 	std::ios_base::sync_with_stdio(false);
 	//ifstream file("C:\\Windows\\en-US\\DS_100K_csv.csv");
 	ifstream file("D:\\Download\\DS_100k_csv.csv");
@@ -58,6 +57,6 @@ int main() {
 	test->transfered = 0;
 	delete test;
 	delete[] pi;
-	}
+
 	system("pause");
 }
