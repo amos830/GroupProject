@@ -27,6 +27,7 @@ public:
 	//Return true if the list is empty
 	bool isEmpty();
 	int count;
+	int id;
 	//Append an item to the linked list.  The new item will be the last item in the list
 	//void insertItem(record* record);
 	void insertItem(record* record);
@@ -37,11 +38,13 @@ public:
 	void setHead(ItemNode* node);
 	static int sortCount;
 	// Getting the head pointer of the inventory list
-	ItemNode* getHead();
+	//shared_ptr<ItemNode> getHead();
 	InventoryList* quicksort();
 	void combine(InventoryList* target);
 	static InventoryList* combine(InventoryList* first, InventoryList* second);
-	InventoryList* combine(InventoryList* first, InventoryList* second, shared_ptr<ItemNode> pivot);
-	//InventoryList* combine(InventoryList* first, InventoryList* second, ItemNode* pivot);
+	//shared_ptr<InventoryList> combine(shared_ptr<InventoryList> first, shared_ptr<InventoryList> second, shared_ptr<ItemNode> pivot);
+	InventoryList* combine(InventoryList* first, InventoryList* second, ItemNode* pivot);
+	//InventoryList* combine(InventoryList* first, InventoryList* second, shared_ptr<ItemNode> pivot);
 	void displayList();
+	bool hasData;
 };

@@ -9,6 +9,7 @@ InventoryList::InventoryList() {
 	InventoryList::head = NULL;
 	transfered = 0;
 	count = 0;
+	hasData = false;
 }
 InventoryList::InventoryList(ItemNode* head) {
 	head = head;
@@ -19,7 +20,7 @@ InventoryList::InventoryList(ItemNode* head) {
 // Check whether a list is empty
 // Given
 bool InventoryList::isEmpty() {
-	return InventoryList::head == NULL ? true : false;
+	return head == NULL ? true : false;
 }
 
 /*
@@ -88,97 +89,68 @@ void InventoryList::setHead(ItemNode* n) {
 }
 
 // As head is set to public, this is totally an option for you to use
-ItemNode* InventoryList::getHead() {
+/*ItemNode* InventoryList::getHead() {
 	return head;
-}
+}*/
 
 InventoryList* InventoryList::quicksort()
 {
-	shared_ptr<InventoryList> smallList(new InventoryList());
-	shared_ptr<InventoryList> largeList(new InventoryList());
-	bool is = this->isSorted();
-	bool is2 = string("Ar") < string("Br");
+	bool is = isSorted();
 	if(!is)
 	{
+		InventoryList* smallList=new InventoryList();
+		InventoryList* largeList =new InventoryList();
 		ItemNode* current = head->next;
-		shared_ptr<ItemNode>pivot(head);
+		ItemNode* pivot =head;
 		while (current != NULL)
 		{
 			if (pivot->data->country >= current->data->country) 
 				smallList->insertItem(current->data.get());
 			else 
 				largeList->insertItem(current->data.get());
-			ItemNode* tem = current;
 			current = current->next;
-			tem->data->deepDelete = 0;
-			delete tem;
 		}
 		/*cout << "Sort Count "<<++sortCount<< endl;
 		cout << "small list address :" <<smallList<< endl;
 		smallList->displayList();
-		cout << "pivot "<<pivot->data.country<< endl;
+		cout << "pivot "<<pivot->data->country<< endl;
 		cout << "large address :" << largeList << endl;
 		largeList->displayList();
-		cout << endl;*/
-		InventoryList* sortedS = smallList->quicksort();
-		InventoryList* sortedL=largeList->quicksort();
-		InventoryList* output=InventoryList::combine(sortedS, sortedL,pivot);
-		//sortedS->emptyList(true);
-		return output;
+		cout << endl;*/  //DEBUG
+		return InventoryList::combine(largeList->quicksort(), smallList->quicksort(),pivot);
 	}
 	return this;
 }
-
-void InventoryList::combine(InventoryList* target)
-{
-	if(!(target->isEmpty()))
-		if (isEmpty())
-			head = target->head;
-		else {
-			ItemNode* current = head;
-			while (current->next!= NULL)
-				current = current->next;
-			current->next = target->head;
-		}
-	target->transfered = 1;
-}
-InventoryList* InventoryList::combine(InventoryList* first,InventoryList* second)
-{
-	if (!(second->isEmpty())) {
-		if (first->isEmpty())
-			first->head = second->head;
-		else {
-			ItemNode* current = first->head;
-			while (current->next != NULL&&current!=NULL)
-				current = current->next;
-			current->next = second->head;
-		}
-		second->transfered = 1;
-		//delete second;
-	}
-	return first;
-}
-InventoryList* InventoryList::combine(InventoryList* first, InventoryList* second,shared_ptr<ItemNode> pivot)
-{
+InventoryList* InventoryList::combine(InventoryList* second, InventoryList* first,ItemNode* pivot){
 	/*cout << "before" << endl;
 	cout << "first" << endl;
 	first->displayList();
-	cout << "pivot: " << pivot->data.country<<endl;
 	cout << "second" << endl;
-	second->displayList();*/
-		if (first->isEmpty())
-			first->head = second->head;
+	cout << pivot->data->country << endl;
+	second->displayList();*/ //DEBUG
+		if (first->isEmpty()) {
+			first->head = pivot;
+			if (second->isEmpty())
+				pivot->next = NULL;
+			else
+				pivot->next = second->head;
+		}
 		else {
 			ItemNode* current = first->head;
 			while (current->next != NULL)
 				current = current->next;
-				current->next = pivot.get();
-				pivot->next=second->head;
+			current->next = pivot;
+			if (second->isEmpty())
+				pivot->next = NULL;
+			else
+				pivot->next = second->head;
 		}
 		second->transfered = 1;
-		second->~InventoryList();
-	//cout << "combined" << endl;
-	//first->displayList();
+		//second->~InventoryList();
+		delete second;
+		second = NULL;
+		/*cout << "combined" << endl;
+		first->displayList();*/	//DEBUG
 	return first;
 }
 void InventoryList::displayList()
@@ -206,6 +178,7 @@ void InventoryList::displayList()
 			<< current->data.country << endl << endl;*/
 		current = current->next;
 	}
+	//cout << "list displayed sycessfully" << endl;	//DEBUG
 }
 
 InventoryList::~InventoryList() {
