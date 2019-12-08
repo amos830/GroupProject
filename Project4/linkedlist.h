@@ -11,6 +11,7 @@ public:
 	ListItem* head;
 	ListItem* last;
 	int transfered;
+	bool deepDelete;
 	LinkedList();
 	LinkedList(ListItem* head);
 	~LinkedList();
@@ -25,7 +26,6 @@ public:
 	//void insertItem(record* record);
 	void insertItem(record* record);
 	void insertItem(ListItem* node);
-	void markDeepDelete();
 	//Remove the item with the specified item code
 	// Setting the head pointer point to the first element
 	void setHead(ListItem* node);
@@ -38,8 +38,8 @@ public:
 	//shared_ptr<LinkedList> combine(shared_ptr<LinkedList> first, shared_ptr<LinkedList> second, shared_ptr<ListItem> pivot);
 	LinkedList* combine(LinkedList* first, LinkedList* second, ListItem* pivot);
 	void linearsearchRecord(int type, string key);
-
+	void deleteCountry(string country);
+	void deletePhoneNumber(string phoneNumber);
 	//LinkedList* combine(LinkedList* first, LinkedList* second, shared_ptr<ListItem> pivot);
 	void displayList();
-	bool hasData;
 };

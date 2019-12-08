@@ -9,5 +9,4 @@ ListItem::ListItem(record* data)
 
 ListItem::~ListItem()
 {
-	delete data;
 }

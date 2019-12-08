@@ -23,7 +23,7 @@ LinkedList::LinkedList() {
 	last = head;
 	transfered = 0;
 	count = 0;
-	hasData = false;
+	deepDelete = true;
 	//cout <<this<< " created" << endl;
 }
 LinkedList::LinkedList(ListItem* head) {
@@ -82,14 +82,14 @@ void LinkedList::insertItem(ListItem* node) {
 	return;
 }
 
-void LinkedList::markDeepDelete()
+/*void LinkedList::markDeepDelete()
 {
 	ListItem* current = head;
 	while(current!=NULL){
 		current->data->deepDelete = 1;
 		current = current->next;
 	}
-}
+}*/
 
 // As head is set to public, this is totally an option for you to use
 void LinkedList::setHead(ListItem* n) {
@@ -291,6 +291,54 @@ void LinkedList::linearsearchRecord(int type, string key)
 			cout << "displayed " << countdisplay << " Results" << endl;
 }
 
+void LinkedList::deleteCountry(string country)
+{
+	ListItem* current;
+	while (head != NULL && (head->data->pNumber.compare(country) == 0))
+	{
+		current = head;
+		head = head->next;
+		delete current;
+	}
+	if (head != NULL) {
+		current = head;
+		ListItem* temp;
+		while (current != NULL)
+		{
+			while (current->next != NULL && current->next->data->pNumber.compare(country) == 0) {
+				temp = current->next;
+				current->next = temp->next;
+				delete temp;
+			}
+			current = current->next;
+		}
+	}
+}
+
+void LinkedList::deletePhoneNumber(string phoneNumber)
+{
+	ListItem* current;
+	while (head!=NULL&&(head->data->pNumber.compare(phoneNumber) == 0))
+	{
+		current = head;
+		head = head->next;
+		delete current;
+	}
+	if (head != NULL) {
+		current = head;
+		ListItem* temp;
+		while (current!= NULL)
+		{
+			while(current->next != NULL&&current->next->data->pNumber.compare(phoneNumber) == 0) {
+				temp = current->next;
+				current->next = temp->next;
+				delete temp;
+			}
+			current = current->next;
+		}
+	}
+}
+
 void LinkedList::displayList()
 {
 	ListItem* current = head;
@@ -321,6 +369,8 @@ void LinkedList::emptyList()
 
 	while (curr) {
 		next = curr->next;
+		if (deepDelete)
+			delete curr->data;
 		delete curr;
 		curr = next;
 	}

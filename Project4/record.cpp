@@ -17,7 +17,6 @@ record::record(string ID,string jobTitle,string emailAddress,string lastName,str
 	this->pNumber=pNumber;
 	this->skills=skills;
 	this->country=country;
-	deepDelete = 1;
 	//cout << this << " Record Created" << endl;
 }
 
@@ -42,9 +41,4 @@ void record::displayRecord()
 		<< this->pNumber << " "
 		<< this->skills << " "
 		<< this->country << endl;
-}
-
-void record::markdeleteRecord()
-{
-	this->pNumber = "delete";
 }
