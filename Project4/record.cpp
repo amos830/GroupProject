@@ -46,5 +46,5 @@ void record::displayRecord()
 
 void record::markdeleteRecord()
 {
-	this->pNumber = delete;
+	this->pNumber = "delete";
 }
