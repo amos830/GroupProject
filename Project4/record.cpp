@@ -6,6 +6,7 @@ record::record()
 {
 	//cout << this << " Record Created" << endl;
 }
+
 record::record(string ID,string jobTitle,string emailAddress,string lastName,string firstName,string pNumber,string skills,string country)
 {
 	this->ID=ID;
@@ -22,13 +23,28 @@ record::record(string ID,string jobTitle,string emailAddress,string lastName,str
 
 record::~record()
 {
-	/*cout << &ID<<" "
-		<< &jobTitle << " "
-		<< &emailAddress << " "
-		<< &lastName << " "
-		<< &firstName << " "
-		<< &pNumber << " "
-		<< &skills << " "
-		<< &country << endl;*/
-	//cout << this << " Record Deleted" << endl;
+	/*cout<<"record "<< this->ID << " "
+		<< this->jobTitle << " "
+		<< this->emailAddress << " "
+		<< this->lastName << " "
+		<< this->firstName << " "
+		<< this->pNumber << " "
+		<< this->skills << " "
+		<< this->country <<" deleted"<<endl;*/
+}
+void record::displayRecord()
+{
+		cout << this->ID<<" "
+		<< this->jobTitle << " "
+		<< this->emailAddress << " "
+		<< this->lastName << " "
+		<< this->firstName << " "
+		<< this->pNumber << " "
+		<< this->skills << " "
+		<< this->country << endl;
+}
+
+void record::markdeleteRecord()
+{
+	this->pNumber = delete;
 }

@@ -15,6 +15,8 @@ public:
 	string pNumber;
 	string skills;
 	string country;
+	void displayRecord();
+	void markdeleteRecord();
 	bool deepDelete;
 };
 

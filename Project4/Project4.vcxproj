@@ -125,11 +125,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="HashTable.h" />
     <ClInclude Include="linkedlist.h" />
+    <ClInclude Include="ListItem.h" />
     <ClInclude Include="record.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="HashTable.cpp" />
     <ClCompile Include="linkedlist.cpp" />
+    <ClCompile Include="ListItem.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="record.cpp" />
   </ItemGroup>
