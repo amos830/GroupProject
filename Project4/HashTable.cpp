@@ -75,7 +75,7 @@ void HashTable::displayAllRecords()
 	for (int i = 0; i < this->size; i++)
 	{
 		if (hashTableArray[i] != NULL) {
-			cout <<endl<< "Hash Table Value of " << i < , endl;
+			cout <<endl<< "Hash Table Value of " << i << endl;
 			hashTableArray[i]->displayList();
 		}
 	}
