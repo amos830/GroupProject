@@ -14,5 +14,4 @@ public:
 	LinkedList* getQuery(string key);
 	int bitRequired;
 	void displayAllRecords();
-	void
 };

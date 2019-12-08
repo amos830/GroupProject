@@ -24,13 +24,13 @@ int main() {
 	menu();
 	structure->transfered = 0;
 
-	if (!p_NumberTable)
+	if (p_NumberTable)
 		delete p_NumberTable;
-	if (!skillsTable)
+	if (skillsTable)
 		delete skillsTable;
-	if (!jobTable)
+	if (jobTable)
 		delete jobTable;
-	if (!countryTable)
+	if (countryTable)
 		delete countryTable;
 	delete structure;
 	system("pause");
@@ -277,6 +277,7 @@ void menu() {
 			cout << "6: Show Number Of Element" << endl;
 		}
 		cout << "31415926: Exit" << endl;
+
 		cin >> action;
 		cout <<endl << "-------------------------------------------------------------" << endl;
 		switch (action) {

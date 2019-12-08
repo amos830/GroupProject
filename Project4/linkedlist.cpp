@@ -374,7 +374,7 @@ void LinkedList::emptyList()
 		delete curr;
 		curr = next;
 	}
-	cout << this << " content deleted" << endl;
+	//cout << this << " content deleted" << endl;
 }
 
 bool LinkedList::isSorted()

@@ -24,7 +24,7 @@ HashTable::~HashTable()
 	for (int i = 0; i <size;i++)
 	{
 		if (hashTableArray[i]!=NULL)
-		{		//todo
+		{	
 			delete hashTableArray[i];
 		}
 	}
@@ -50,6 +50,7 @@ void HashTable::insertRecord(string key, record* value)
 		{
 			hashTableArray[hashValue] = new LinkedList();
 			hashTableArray[hashValue]->deepDelete = 0;
+			hashTableArray[hashValue]->transfered = 0;
 		}
 	hashTableArray[hashValue]->insertItem(value);
 }
