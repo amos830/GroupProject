@@ -3,7 +3,7 @@
 #include <iostream>
 #define FNV_32_PRIME 16777619
 #define FNV_32_BASIS 2166136261
-#define LOAD_FACTOR  1.2
+#define LOAD_FACTOR  1.1
 using namespace std;
 
 HashTable::HashTable(int size)
@@ -28,6 +28,7 @@ HashTable::~HashTable()
 			delete hashTableArray[i];
 		}
 	}
+	delete[] hashTableArray;
 }
 
 unsigned long int HashTable::FNV_1aHash(string key)
@@ -81,3 +82,13 @@ void HashTable::displayAllRecords()
 		}
 	}
 }
+
+void HashTable::deleteWithSecondKey(string mainkey, string auxkey,int type)
+{
+	unsigned long int hashValue = FNV_1aHash(mainkey);
+	if (type == 1)
+		hashTableArray[hashValue]->deletePhoneNumber(auxkey);
+	else
+		hashTableArray[hashValue]->deleteCountry(auxkey);
+}
+

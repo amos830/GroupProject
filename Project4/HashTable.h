@@ -14,4 +14,5 @@ public:
 	LinkedList* getQuery(string key);
 	int bitRequired;
 	void displayAllRecords();
+	void deleteWithSecondKey(string mainkey,string auxkey,int type);
 };

@@ -294,10 +294,12 @@ void LinkedList::linearsearchRecord(int type, string key)
 void LinkedList::deleteCountry(string country)
 {
 	ListItem* current;
-	while (head != NULL && (head->data->pNumber.compare(country) == 0))
+	while (head != NULL && (head->data->country.compare(country) == 0))
 	{
 		current = head;
 		head = head->next;
+		if (deepDelete)
+			delete current->data;
 		delete current;
 	}
 	if (head != NULL) {
@@ -305,9 +307,11 @@ void LinkedList::deleteCountry(string country)
 		ListItem* temp;
 		while (current != NULL)
 		{
-			while (current->next != NULL && current->next->data->pNumber.compare(country) == 0) {
+			while (current->next != NULL && current->next->data->country.compare(country) == 0) {
 				temp = current->next;
 				current->next = temp->next;
+				if (deepDelete)
+					delete temp->data;
 				delete temp;
 			}
 			current = current->next;
@@ -317,11 +321,13 @@ void LinkedList::deleteCountry(string country)
 
 void LinkedList::deletePhoneNumber(string phoneNumber)
 {
-	ListItem* current;
+	ListItem* current=head;
 	while (head!=NULL&&(head->data->pNumber.compare(phoneNumber) == 0))
 	{
 		current = head;
 		head = head->next;
+		if (deepDelete)
+			delete current->data;
 		delete current;
 	}
 	if (head != NULL) {
@@ -332,6 +338,8 @@ void LinkedList::deletePhoneNumber(string phoneNumber)
 			while(current->next != NULL&&current->next->data->pNumber.compare(phoneNumber) == 0) {
 				temp = current->next;
 				current->next = temp->next;
+				if (deepDelete)
+					delete temp->data;
 				delete temp;
 			}
 			current = current->next;

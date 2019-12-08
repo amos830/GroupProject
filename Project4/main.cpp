@@ -8,6 +8,9 @@
 #include <string>
 #include "linkedlist.h"
 #include "ListItem.h"
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 
 using namespace std;
 
@@ -20,6 +23,7 @@ void menu();
 clock_t startTime;
 clock_t endTime;
 int main() {
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	structure = new LinkedList();
 	menu();
 	structure->transfered = 0;
@@ -42,9 +46,11 @@ void importLists(){
 		do {
 			cout<< "type location of dataset: ";
 			cin >> location;
+			if (cin.fail())
+				cin.clear();
 			if (location.length()<5||location.substr(location.length() - 4) != ".csv") {
 				cout << "This File Cannot Be Read, Please enter again" << endl;
-				//location = "C:\\ADB\\DS_10K_CSV.csv"; //DEBUG 
+				//location = "C:\\ADB\\DS_10_CSV.csv"; //DEBUG 
 				location = "D:\\Download\\DS_100k_CSV.csv";
 				}
 			}while (location.substr(location.length() - 4) != ".csv"|| !ifstream(location));
@@ -56,16 +62,17 @@ void importLists(){
 	cout << noOfItems << endl;
 	if (!structure->isEmpty())
 	{
-		structure->emptyList();
+		delete structure;
+		structure = new LinkedList();
 	}
 	string* pi = new string[8];
-	if (!p_NumberTable)
+	if (p_NumberTable)
 		delete p_NumberTable;
-	if (!skillsTable)
+	if (skillsTable)
 		delete skillsTable;
-	if (!jobTable)
+	if (jobTable)
 		delete jobTable;
-	if (!countryTable)
+	if (countryTable)
 		delete countryTable;
 	p_NumberTable = new HashTable(noOfItems);
 	skillsTable = new HashTable(noOfItems);
@@ -103,6 +110,7 @@ void importLists(){
 	else
 		cout << "list Not Sorted" << endl;
 	cout << "sort start" << endl;
+	//structure->displayList();
 	startTime = clock();
 	 structure=structure->quicksort();
 	endTime = clock();
@@ -113,7 +121,64 @@ void importLists(){
 	delete[] pi;
 }
 
-
+void deletePhoneNumber() {
+	string pHomeNumber;
+	cin.ignore(0x7FFFFFFF, '\n');
+	cout << "Phone Number To be deleted: " << endl;
+	getline(cin,pHomeNumber);
+	startTime = clock();
+	LinkedList* test;
+	test = p_NumberTable->getQuery(pHomeNumber);
+	if (test) {
+		ListItem* current = test->head;
+		while (current != NULL)
+		{
+			record* temRecord=current->data;
+			if (current->data->pNumber.compare(pHomeNumber) == 0) {
+				p_NumberTable->deleteWithSecondKey(temRecord->pNumber, temRecord->pNumber, 1);
+				skillsTable->deleteWithSecondKey(temRecord->skills, pHomeNumber, 1);
+				jobTable->deleteWithSecondKey(temRecord->jobTitle, pHomeNumber, 1);
+				countryTable->deleteWithSecondKey(temRecord->country, pHomeNumber, 1);
+				structure->transfered = 0;
+				structure->deepDelete = 1;
+				structure->deletePhoneNumber(pHomeNumber);
+			}
+			current = current->next;
+		}
+		delete test;
+	}
+	else
+		cout << "Not Found" << endl;
+}
+void deleteCountry() {
+	string pHomeNumber;
+	cin.ignore(0x7FFFFFFF, '\n');
+	cout << "Country To be destroyed: " << endl;
+	getline(cin, pHomeNumber);
+	startTime = clock();
+	cout << pHomeNumber << endl;
+	LinkedList* test = countryTable->getQuery(pHomeNumber);
+	if (test) {
+		ListItem* current = test->head;
+		while (current != NULL)
+		{
+			if (current->data->country.compare(pHomeNumber) == 0) {
+				p_NumberTable->deleteWithSecondKey(current->data->pNumber, pHomeNumber, 2);
+				skillsTable->deleteWithSecondKey(current->data->skills, pHomeNumber, 2);
+				jobTable->deleteWithSecondKey(current->data->jobTitle, pHomeNumber, 2);
+				countryTable->deleteWithSecondKey(current->data->country, pHomeNumber, 2);
+			}
+			current = current->next;
+		}
+		structure->deepDelete = 1;
+		structure->transfered = 0;
+		structure->deleteCountry(pHomeNumber);
+		cout << endl << endl << pHomeNumber << " Nuked" << endl << endl;
+		delete test;
+	}
+	else
+		cout << "Not Found" << endl;
+}
 void search() {
 	int result=0;
 	string key;
@@ -124,12 +189,13 @@ void search() {
 	cout << "4: Country" << endl;
 	cout << "Others: Exit" << endl;
 	cin >> result;
+	if (cin.fail())
+		cin.clear();
+	cin.ignore(0x7FFFFFFF, '\n');
 	cout << "Search By: " << endl;
-		cin.ignore();
 		getline(cin, key);
 		LinkedList* queryResult=NULL;
 		//ListItem* Current;
-		LinkedList* QueryResult = new LinkedList();
 
 	switch (result)
 	{
@@ -147,12 +213,15 @@ void search() {
 			cout << "4: Country" << endl;
 			cout << "Others: Exit" << endl;
 			cin >> result;
+			if (cin.fail())
+				cin.clear();
+			cin.ignore(0x7FFFFFFF, '\n');
 			switch (result) {
 			case 2:
 			case 3:
 			case 4:
 				cout << "Search By: " << endl;
-				cin.ignore();
+				cin.ignore(0x7FFFFFFF, '\n');
 				getline(cin, key);
 				queryResult->linearsearchRecord(result, key);
 				break;
@@ -175,12 +244,15 @@ void search() {
 			cout << "4: Country" << endl;
 			cout << "Others: Exit" << endl;
 			cin >> result;
+			if (cin.fail())
+				cin.clear();
+			cin.ignore(0x7FFFFFFF, '\n');
 			switch (result) {
 			case 1:
 			case 3:
 			case 4:
 				cout << "Search By: " << endl;
-				cin.ignore();
+				cin.ignore(0x7FFFFFFF, '\n');
 				getline(cin, key);
 				queryResult->linearsearchRecord(result, key);
 				break;
@@ -205,12 +277,15 @@ void search() {
 			cout << "4: Country" << endl;
 			cout << "Others: Exit" << endl;
 			cin >> result;
+			if (cin.fail())
+				cin.clear();
+			cin.ignore(0x7FFFFFFF, '\n');
 			switch (result) {
 			case 1:
 			case 2:
 			case 4:
 				cout << "Search By: " << endl;
-				cin.ignore();
+				cin.ignore(0x7FFFFFFF, '\n');
 				getline(cin, key);
 				queryResult->linearsearchRecord(result, key);
 				break;
@@ -235,12 +310,15 @@ void search() {
 			cout << "3: JobTitle" << endl;
 			cout << "5: Exit" << endl;
 			cin >> result;
+			if (cin.fail())
+				cin.clear();
+			cin.ignore(0x7FFFFFFF, '\n');
 			switch (result) {
 			case 1:
 			case 2:
 			case 3:
 				cout << "Search By: " << endl;
-				cin.ignore();
+				cin.ignore(0x7FFFFFFF, '\n');
 				getline(cin, key);
 				queryResult->linearsearchRecord(result, key);
 				break;
@@ -279,6 +357,8 @@ void menu() {
 		cout << "31415926: Exit" << endl;
 
 		cin >> action;
+		if (cin.fail())
+			cin.clear();
 		cout <<endl << "-------------------------------------------------------------" << endl;
 		switch (action) {
 			case(1):
@@ -300,14 +380,17 @@ void menu() {
 				structure->last->data->displayRecord();
 			break;
 			case(3):
+				deletePhoneNumber();
 				break;
 			case(4):
+				deleteCountry();
 				break;
 			case(5):
 				search();
 				break;
 			default:
 				cout << "Not Valid" << endl;
+				break;
 		}
 	}
 }
