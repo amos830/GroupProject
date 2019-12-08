@@ -96,6 +96,7 @@ void importLists(){
 	endTime = clock();
 	cout << "Time Cost: " << (double)(endTime - startTime) / CLOCKS_PER_SEC << endl;
 	cout << " No:of data " << k << endl;
+
 	cout << "pre Sort Check" << endl;
 	if (structure->isSorted())
 		cout << "list Sorted" << endl;
@@ -107,6 +108,7 @@ void importLists(){
 	endTime = clock();
 	cout << "Time Cost for sorting:" << (double)(endTime - startTime) / CLOCKS_PER_SEC << endl;
 	cout << "display" << endl;
+  
 	cout << "import completed" << endl;
 	delete[] pi;
 }
@@ -252,6 +254,7 @@ void search() {
 		cout <<endl<<endl<< "Wrong Answer" << endl << endl ;
 		break;
 	}
+
 	cout << endl << endl << "End Search" << endl << endl;
 	if (queryResult) {
 		delete queryResult;
