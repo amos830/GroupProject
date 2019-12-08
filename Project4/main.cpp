@@ -146,6 +146,8 @@ void deletePhoneNumber() {
 			current = current->next;
 		}
 		delete test;
+		endTime = clock();
+		cout << "Time Cost for deleting" << (double)(endTime - startTime) / CLOCKS_PER_SEC << endl;
 	}
 	else
 		cout << "Not Found" << endl;
@@ -174,6 +176,8 @@ void deleteCountry() {
 		structure->transfered = 0;
 		structure->deleteCountry(pHomeNumber);
 		cout << endl << endl << pHomeNumber << " Nuked" << endl << endl;
+		endTime = clock();
+		cout << "Time Cost for deleting" << (double)(endTime - startTime) / CLOCKS_PER_SEC << endl;
 		delete test;
 	}
 	else
@@ -203,7 +207,7 @@ void search() {
 		startTime = clock();
 		//cout << "you Inserted: "<<key<<endl;
 		queryResult=p_NumberTable->getQuery(key);
-		if (queryResult) {
+		if (queryResult&&!queryResult->isEmpty()) {
 			queryResult = queryResult->quicksort();
 			endTime = clock();
 			queryResult->linearsearchRecord(1, key);
@@ -234,7 +238,7 @@ void search() {
 	case(2):
 		startTime = clock();
 		queryResult = skillsTable->getQuery(key);
-		if (queryResult) {
+		if (queryResult && !queryResult->isEmpty()) {
 			queryResult = queryResult->quicksort();
 			endTime = clock();
 			queryResult->linearsearchRecord(result, key);
@@ -267,7 +271,7 @@ void search() {
 	case(3):
 		startTime = clock();
 		queryResult = jobTable->getQuery(key);
-		if (queryResult) {
+		if (queryResult && !queryResult->isEmpty()) {
 			queryResult = queryResult->quicksort();
 			endTime = clock();
 			queryResult->linearsearchRecord(result, key);
@@ -300,7 +304,7 @@ void search() {
 	case(4):
 		startTime = clock();
 		queryResult = countryTable->getQuery(key);
-		if (queryResult) {
+		if (queryResult && !queryResult->isEmpty()) {
 			queryResult = queryResult->quicksort();
 			endTime = clock();
 			queryResult->linearsearchRecord(result, key);
