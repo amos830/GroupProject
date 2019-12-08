@@ -1,25 +1,43 @@
 #include <stdio.h>
 #include <iostream>
 #include "linkedlist.h"
+#include "ListItem.h"
 
 using namespace std;
-int InventoryList::sortCount;
+int LinkedList::sortCount;
+void LinkedList::displayCount()
+{
+	int count = 0;
+	ListItem* current = head;
+	while (current != NULL)
+	{
+		current=current->next;
+		count++;
+	}
+	cout << "Number of Records: " << count << endl;
+	this->count = count;
+}
 //Given
-InventoryList::InventoryList() {
-	InventoryList::head = NULL;
+LinkedList::LinkedList() {
+	LinkedList::head = NULL;
+	last = head;
 	transfered = 0;
 	count = 0;
+	hasData = false;
+	//cout <<this<< " created" << endl;
 }
-InventoryList::InventoryList(ItemNode* head) {
-	head = head;
+LinkedList::LinkedList(ListItem* head) {
+	this->head = head;
+	last = head;
+	head->next = NULL;
 	transfered = 0;
 	count = 1;
 }
 
 // Check whether a list is empty
 // Given
-bool InventoryList::isEmpty() {
-	return InventoryList::head == NULL ? true : false;
+bool LinkedList::isEmpty() {
+	return head == NULL ? true : false;
 }
 
 /*
@@ -37,21 +55,24 @@ bool InventoryList::isEmpty() {
  The function will append a new item to the end of the linked list.  Display either successful
  or fail message according to the insertion result.
  */
-void InventoryList::insertItem(record* record) {
+void LinkedList::insertItem(record* record) {
 	//Begin coding here
 	if (isEmpty()) {
-		head=new ItemNode(record);
+		head=new ListItem(record);
+		last = head;
 		count++;
 		return;
 	}
-	ItemNode* current=new ItemNode(record);
+	ListItem* current=new ListItem(record);
 	current->next = head;
 	count++;
 	head = current;
 }
-void InventoryList::insertItem(ItemNode* node) {
+
+void LinkedList::insertItem(ListItem* node) {
 	if (isEmpty()) {
 		head = node;
+		last = head;
 		head->next=NULL;
 		return;
 	}
@@ -61,180 +82,258 @@ void InventoryList::insertItem(ItemNode* node) {
 	return;
 }
 
-void InventoryList::markDeepDelete()
+void LinkedList::markDeepDelete()
 {
-	ItemNode* current = head;
+	ListItem* current = head;
 	while(current!=NULL){
 		current->data->deepDelete = 1;
 		current = current->next;
 	}
 }
 
-/*
- Tasks 6: Forming a linked list with only priority item
-
- The function will perform the following tasks:
- 1) Create an inventory list, say, tempList for the priority item(s)
- 2) Look for all priority items in the original linked list.
- 3) If any priority item found, append the priority item to the tempList
- 4) Return the tempList
-
- After this task, a head pointer (ItemNode*) to priority item list is returned.
- */
-
 // As head is set to public, this is totally an option for you to use
-void InventoryList::setHead(ItemNode* n) {
-	InventoryList::head = n;
+void LinkedList::setHead(ListItem* n) {
+	LinkedList::head = n;
 }
 
-// As head is set to public, this is totally an option for you to use
-ItemNode* InventoryList::getHead() {
-	return head;
-}
-
-InventoryList* InventoryList::quicksort()
+LinkedList* LinkedList::quicksort()
 {
-	shared_ptr<InventoryList> smallList(new InventoryList());
-	shared_ptr<InventoryList> largeList(new InventoryList());
-	bool is = this->isSorted();
-	bool is2 = string("Ar") < string("Br");
+	bool is = isSorted();
+	//ListItem* wrong = isNotSorted();
 	if(!is)
+	//if(wrong)
 	{
-		ItemNode* current = head->next;
-		shared_ptr<ItemNode>pivot(head);
+		LinkedList* smallList=new LinkedList();
+		LinkedList* largeList =new LinkedList();
+		ListItem* current = head->next;
+		LinkedList* pivot=new LinkedList();
+		pivot->insertItem(head);
+		//ListItem* current = head;
+		//pivot->head= wrong;
+		//pivot->last = wrong;
+		ListItem* temp;
 		while (current != NULL)
 		{
-			if (pivot->data->country >= current->data->country) 
-				smallList->insertItem(current->data.get());
-			else 
-				largeList->insertItem(current->data.get());
-			ItemNode* tem = current;
+			temp = current;
 			current = current->next;
-			tem->data->deepDelete = 0;
-			delete tem;
+			if (pivot->head->data->country > temp->data->country)
+				smallList->insertItem(temp);
+			else if (pivot->head->data->country.compare(temp->data->country)==0)
+				pivot->insertItem(temp);
+			else 
+				largeList->insertItem(temp);
 		}
+		this->transfered = 1;
+		delete this;
 		/*cout << "Sort Count "<<++sortCount<< endl;
 		cout << "small list address :" <<smallList<< endl;
 		smallList->displayList();
-		cout << "pivot "<<pivot->data.country<< endl;
+		cout << "pivot " << endl;
+		pivot->displayList();
 		cout << "large address :" << largeList << endl;
 		largeList->displayList();
-		cout << endl;*/
-		InventoryList* sortedS = smallList->quicksort();
-		InventoryList* sortedL=largeList->quicksort();
-		InventoryList* output=InventoryList::combine(sortedS, sortedL,pivot);
-		//sortedS->emptyList(true);
-		return output;
+		cout << endl; //DEBUG*/
+		if(smallList->count>largeList->count)
+			return LinkedList::combineLarge(smallList->quicksort(),largeList->quicksort(), pivot);
+		else
+			return LinkedList::combine(largeList->quicksort(), smallList->quicksort(),pivot);
 	}
 	return this;
 }
 
-void InventoryList::combine(InventoryList* target)
-{
-	if(!(target->isEmpty()))
-		if (isEmpty())
-			head = target->head;
-		else {
-			ItemNode* current = head;
-			while (current->next!= NULL)
-				current = current->next;
-			current->next = target->head;
+LinkedList* LinkedList::combineLarge(LinkedList* first, LinkedList* second, LinkedList* pivot) {
+	/*	cout << "before" << endl;
+		cout << "first" << endl;
+		first->displayList();
+		cout << "before change ";
+		first->last->data->displayRecord();
+		cout << "pivot" << endl;
+		pivot->displayList();
+		cout << "second" << endl;
+		second->displayList();			 */			//DEBUG		
+	if (first->isEmpty()) {
+		first->head = pivot->head;
+		if (second->isEmpty()) {
+			pivot->last->next = NULL;
+			first->last = pivot->last;
 		}
-	target->transfered = 1;
-}
-InventoryList* InventoryList::combine(InventoryList* first,InventoryList* second)
-{
-	if (!(second->isEmpty())) {
-		if (first->isEmpty())
-			first->head = second->head;
 		else {
-			ItemNode* current = first->head;
-			while (current->next != NULL&&current!=NULL)
-				current = current->next;
-			current->next = second->head;
+			pivot->last->next = second->head;
+			first->last = second->last;
 		}
-		second->transfered = 1;
-		//delete second;
 	}
+	else {
+		first->last->next = pivot->head;
+		if (second->isEmpty()) {
+			pivot->last->next = NULL;
+			first->last = pivot->last;
+		}
+		else {
+			pivot->last->next = second->head;
+			first->last = second->last;
+		}
+	}
+	second->transfered = 1;
+	//second->~LinkedList();
+	pivot->transfered = 1;
+	delete pivot;
+	delete second;
+	second = NULL;
+	/*cout << "combined" << endl;
+	first->displayList();	//DEBUG*/
 	return first;
 }
-InventoryList* InventoryList::combine(InventoryList* first, InventoryList* second,shared_ptr<ItemNode> pivot)
-{
-	/*cout << "before" << endl;
+
+LinkedList* LinkedList::combine(LinkedList* second, LinkedList* first,LinkedList* pivot){
+/*	cout << "before" << endl;
 	cout << "first" << endl;
 	first->displayList();
-	cout << "pivot: " << pivot->data.country<<endl;
+	cout << "before change ";
+	first->last->data->displayRecord();
+	cout << "pivot" << endl;
+	pivot->displayList();
 	cout << "second" << endl;
-	second->displayList();*/
-		if (first->isEmpty())
-			first->head = second->head;
+	second->displayList();			 */			//DEBUG		
+		if (first->isEmpty()) {
+			first->head = pivot->head;
+			if (second->isEmpty()) {
+				pivot->last->next = NULL;
+				first->last = pivot->last;
+			}
+			else {
+				pivot->last->next = second->head;
+				first->last = second->last;
+			}
+		}
 		else {
-			ItemNode* current = first->head;
-			while (current->next != NULL)
-				current = current->next;
-				current->next = pivot.get();
-				pivot->next=second->head;
+			first->last->next = pivot->head;
+			if (second->isEmpty()) {
+				pivot->last->next = NULL;
+				first->last = pivot->last;
+			}
+			else {
+				pivot->last->next = second->head;
+				first->last = second->last;
+			}
 		}
 		second->transfered = 1;
-		second->~InventoryList();
-	//cout << "combined" << endl;
-	//first->displayList();
+		//second->~LinkedList();
+		pivot->transfered = 1;
+		delete pivot;
+		delete second;
+		second = NULL;
+		/*cout << "combined" << endl;
+		first->displayList();	//DEBUG*/
 	return first;
 }
-void InventoryList::displayList()
+
+void LinkedList::linearsearchRecord(int type, string key)
 {
-	ItemNode* current = head;
+	int countdisplay = 0;
+	ListItem* current = head;
+	switch (type) {
+	case 1:
+		cout << endl << "-------------------------------------------------------------" << endl;
+		cout << "Search of Phone Number "<<key<<" Yield These Results" << endl;
+		cout << endl << "-------------------------------------------------------------" << endl;
+		while (current != NULL)
+		{
+			if (current->data->pNumber.compare(key) == 0) {
+				current->data->displayRecord();
+				countdisplay++;
+			}
+			current = current->next;
+		}
+		break;
+	case 2:
+		cout << endl << "-------------------------------------------------------------" << endl;
+		cout << "Search of Skills " << key << " Yield These Results" << endl;
+		cout << endl << "-------------------------------------------------------------" << endl;
+		while (current != NULL)
+		{
+			if (current->data->skills.compare(key) == 0) {
+				current->data->displayRecord();
+				countdisplay++;
+			}
+			current = current->next;
+		}
+		break;
+	case 3:
+		cout << endl << "-------------------------------------------------------------" << endl;
+		cout << "Search of Job Title " << key << " Yield These Results" << endl;
+		cout << endl << "-------------------------------------------------------------" << endl;
+		while (current != NULL)
+		{
+			if (current->data->jobTitle.compare(key) == 0) {
+				current->data->displayRecord();
+				countdisplay++;
+			}
+			current = current->next;
+		}
+		break;
+	case 4:
+		cout << endl << "-------------------------------------------------------------" << endl;
+		cout << "Search of Country " << key << " Yield These Results" << endl;
+		cout << endl << "-------------------------------------------------------------" << endl;
+		while (current != NULL)
+		{
+			if (current->data->country.compare(key) == 0) {
+				current->data->displayRecord();
+				countdisplay++;
+			}
+			current = current->next;
+		}
+		break;
+		}
+		if (countdisplay == 0)
+			cout << "Record Not Found" << endl;
+		else
+			cout << "displayed " << countdisplay << " Results" << endl;
+}
+
+void LinkedList::displayList()
+{
+	ListItem* current = head;
 	int count = 0;
 	while (current != NULL)
 	{
-		cout<<++count<<". "
-		<<current->data->ID<<" "
-		<<current->data->jobTitle << " " 
-		<<current->data->emailAddress << " " 
-		<<current->data->lastName << " " 
-		<<current->data->firstName << " " 
-		<<current->data->pNumber << " " 
-		<<current->data->skills << " " 
-		<<current->data->country<<endl<<endl;
-			/*<< current->data.ID << " "
-			<< current->data.jobTitle << " "
-			<< current->data.emailAddress << " "
-			<< current->data.lastName << " "
-			<< current->data.firstName << " "
-			<< current->data.pNumber << " "
-			<< current->data.skills << " "
-			<< current->data.country << endl << endl;*/
+		cout << count << ". ";
+		current->data->displayRecord();
 		current = current->next;
+		count++;
 	}
+	cout << "Displayed "<< count << " items"<<endl;
+
+	//cout << "list displayed sycessfully" << endl;	//DEBUG
 }
 
-InventoryList::~InventoryList() {
+LinkedList::~LinkedList() {
 	if (!this->transfered) {
 		emptyList();
 	}
 	//cout << this << " deleted" << endl;
 }
 
-void InventoryList::emptyList()
+void LinkedList::emptyList()
 {
-	ItemNode* curr = head;
-	ItemNode* next = NULL;
+	ListItem* curr = head;
+	ListItem* next = NULL;
 
 	while (curr) {
 		next = curr->next;
 		delete curr;
 		curr = next;
 	}
+	cout << this << " content deleted" << endl;
 }
 
-bool InventoryList::isSorted()
+bool LinkedList::isSorted()
 {
-	bool test = 1;
-	if (isEmpty()) {
+	if (isEmpty()||head->next==NULL) {
 		return true;
 	}
-	ItemNode* current = head;
-	while (current->next != NULL &&test)
+	ListItem* current = head;
+	while (current->next != NULL)
 	{
 		if(current->data->country > current->next->data->country)
 			return false;
@@ -242,19 +341,18 @@ bool InventoryList::isSorted()
 	}
 	return true;
 }
+ListItem* LinkedList::isNotSorted()
+{
+	if (isEmpty() || head->next == NULL) {
+		return NULL;
+	}
+	ListItem* current = head;
+	while (current->next != NULL)
+	{
+		if (current->data->country > current->next->data->country)
+			return current;
+		current = current->next;
+	}
+	return NULL;
+}
 
-/*ItemNode::ItemNode(record data)
-{
-	this->data = data;
-	cout << "node: " << data->ID << " From " <<data->country << " created" << endl;
-}*/
-ItemNode::ItemNode(record* data)
-{
-	this->data=shared_ptr<record>(data);
-}
-ItemNode::~ItemNode()
-{
-	//if(data->deepDelete)
-//		delete data;
-	//cout << "node: " << data.ID << " From " << data.country << "deleted " <<this<< endl;
-}
