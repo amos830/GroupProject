@@ -54,7 +54,7 @@ void importLists(){
 				location = "D:\\Download\\DS_100k_CSV.csv";
 				}
 			}while (location.substr(location.length() - 4) != ".csv"|| !ifstream(location));
-	ifstream file(location,ios::binary|ios_base::skipws);
+	ifstream file(location,ios_base::skipws);
 	int noOfItems=0;
 	string temp;
 	while (getline(file, temp))
